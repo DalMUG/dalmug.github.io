@@ -7,6 +7,78 @@
     <meta name="description" content="DalMUG : Dalhousie Microbiome User Group" />
 
     <link rel="stylesheet" type="text/css" media="screen" href="stylesheets/stylesheet.css">
+<script src="http://www.google.com/jsapi?key=AIzaSyA5m1Nc8ws2BbmPRwKu5gFradvD_hgq6G0" type="text/javascript"></script>
+<script type="text/javascript">
+/*
+*  How to load a feed via the Feeds API.
+*/
+
+google.load("feeds", "1");
+
+// Our callback function, for when a feed is loaded.
+function feedLoaded(result) {
+  if (!result.error) {
+    // Grab the container we will put the results into
+    var container = document.getElementById("calendar_events");
+    container.innerHTML = '';
+
+    // Loop through the feeds, putting the titles onto the page.
+    // Check out the result object for a list of properties returned in each entry.
+    // http://code.google.com/apis/ajaxfeeds/documentation/reference.html#JSON
+    for (var i = result.feed.entries.length-1; i >= 0; i--) {
+      var entry = result.feed.entries[i];
+      var div = document.createElement("div");
+      div.className="info"
+
+
+      var link = document.createElement("a");
+
+      var title = document.createTextNode(entry.title);
+
+      var when = entry.contentSnippet.match(/When: .*/);
+      var where = entry.contentSnippet.match(/Where: .*/);
+
+      link.innerHTML = ("<ul><li>" + entry.title  +"</li><ul><li>"+ when+ "</li><li>"+where+ "</li></ul>");
+      link.href = entry.link;
+      link.target = "new";
+
+      div.appendChild(link);
+      container.appendChild(div);
+    }
+  }
+}
+
+function OnLoad() {
+  var prev_date = new Date();
+  prev_date.setDate(prev_date.getDate()-1);
+  prev_date_timestamp = ISODateString(prev_date);
+
+  var yearout_date = new Date();
+  yearout_date.setDate(yearout_date.getDate()+(365*2));
+  yearout_date_timestamp = ISODateString(yearout_date);
+
+  // Create a feed instance that will grab DalMUG's feed.
+  var feed = new google.feeds.Feed("https://www.google.com/calendar/feeds/rbuq3co2omg283gjt0cap9n09c%40group.calendar.google.com/public/basic?max-results=50&orderby=starttime&start-min="+prev_date_timestamp+"&start-max="+yearout_date_timestamp);
+
+  feed.setNumEntries(50);
+
+  // Calling load sends the request off.  It requires a callback function.
+  feed.load(feedLoaded);
+}
+
+//make timestamp date
+function ISODateString(d){
+ function pad(n){return n<10 ? '0'+n : n}
+ return d.getUTCFullYear()+'-'
+      + pad(d.getUTCMonth()+1)+'-'
+      + pad(d.getUTCDate())+'T'
+      + pad(d.getUTCHours())+':'
+      + pad(d.getUTCMinutes())+':'
+      + pad(d.getUTCSeconds())+'Z'
+}
+
+google.setOnLoadCallback(OnLoad);
+</script>
 
     <title>DalMUG</title>
   </head>
@@ -27,10 +99,10 @@
     <!-- MAIN CONTENT -->
     <div id="main_content_wrap" class="outer">
       <section id="main_content" class="inner">
+<h3>Upcoming Events</h3>
+  <div id="calendar_events">Loading...</div>
 
-	<h5><u>Next Meeting:</u><ul><li>"Meet & Greet" - <a href="https://www.google.com/calendar/event?action=TEMPLATE&tmeid=N2dxdWpiNDk0b29xc3IxOWNxMzQ5OGFidmsgcmJ1cTNjbzJvbWcyODNnanQwY2FwOW4wOWNAZw&tmsrc=rbuq3co2omg283gjt0cap9n09c%40group.calendar.google.com">March 26, 2014 from 3-4pm in Tupper 14-B2</a></li></ul></h5>
-
-        <h3>
+<h3>
 <a name="about" class="anchor" href="#about"><span class="octicon octicon-link"></span></a>About</h3>
 
 <p>The Dalhousie Microbiome User Group (DalMUG), is for researchers and clinicians who are interested in microbiome research and are affiliated with Dalhousie University. The goal of the group is to help build collaborations, share resources, and build an interdisciplinary community.</p>
@@ -48,6 +120,7 @@
 <a name="support-or-contact" class="anchor" href="#support-or-contact"><span class="octicon octicon-link"></span></a>Funding and Support</h3>
 
 <p>DalMUG is funded by and is a part of the centre for <a href="http://cgeb.dal.ca">Comparative Genomics and Evolutionary Bioinformatics (CGEB)</a> and is organized by <a href="http://morganlangille.com">Dr. Morgan Langille</a>.</p>
+
 
 <p>If you have a question about DalMUG or are having trouble joining the mailing list you can contact <a href="mailto:morgan.g.i.langille@dal.ca">morgan.g.i.langille@dal.ca</a> and I will help you sort it out.</p>
       </section>
